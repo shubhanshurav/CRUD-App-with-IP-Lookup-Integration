@@ -87,7 +87,11 @@ async function editUser(id) {
   const res = await fetch(
     `http://localhost:5000/api/v1/users/getUserById/${id}`
   );
-  const user = await res.json();
+
+
+  const data = await res.json();
+  const user = data.user;
+  console.log(user)
 
   document.getElementById("name").value = user.name;
   document.getElementById("age").value = user.age;
