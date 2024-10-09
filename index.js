@@ -13,7 +13,7 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
   const userId = document.getElementById("userId").value;
   if (userId) {
     const response = await fetch(
-      `http://localhost:5000/api/v1/users/updateUser/${userId}`,
+      `https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users/updateUser/${userId}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -28,7 +28,7 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
     }
   } else {
     const response = await fetch(
-      "http://localhost:5000/api/v1/users/createUser",
+      "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users/createUser",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -49,7 +49,9 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
 });
 
 async function loadUsers() {
-  const res = await fetch("http://localhost:5000/api/v1/users/getDetails");
+  const res = await fetch(
+    "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users/getDetails"
+  );
   if (!res.ok) {
     console.error("Failed to load users:", await res.text());
     return;
@@ -85,7 +87,7 @@ async function loadUsers() {
 
 async function editUser(id) {
   const res = await fetch(
-    `http://localhost:5000/api/v1/users/getUserById/${id}`
+    `https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users/getUserById/${id}`
   );
 
 
