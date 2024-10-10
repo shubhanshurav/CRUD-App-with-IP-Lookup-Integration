@@ -107,7 +107,7 @@ async function editUser(id) {
 
 async function deleteUser(id) {
   const res = await fetch(
-    `http://localhost:5000/api/v1/users/deleteUser/${id}`,
+    `https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users/deleteUser/${id}`,
     {
       method: "DELETE",
     }
