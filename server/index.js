@@ -16,7 +16,7 @@ app.use(
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
-);  
+);
 
 app.use("/api/v1", userRoutes);
 

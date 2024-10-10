@@ -1,4 +1,3 @@
-// BACKEND_URL variable set ho rahi hai, jissey hum API calls mein use karenge
 const BACKEND_URL =
   "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users" ||
   "http://localhost:8000/api/v1/users";
@@ -40,7 +39,7 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
     const response = await fetch(`${BACKEND_URL}/createUser`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
+      body: JSON.stringify(user), //converts a JavaScript object ko JSON string format
     });
 
     // Response check karke appropriate pop-up dikhayenge
@@ -59,12 +58,13 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
 
 // Yeh function saare users ko load kar raha hai table mein
 async function loadUsers() {
-  const res = await fetch(`${BACKEND_URL}/getDetails`); // API call karke users ki list fetch kar rahe hain
+  const res = await fetch(`${BACKEND_URL}/getDetails`);
   if (!res.ok) {
-    console.error("Failed to load users:", await res.text()); // Error handling kar rahe hain
+    console.error("failed to load users:"); 
     return;
   }
-  const data = await res.json(); // JSON format mein response data ko parse kar rahe hain
+
+  const data = await res.json();
   const users = data.users;
   console.log(users); 
 
@@ -87,23 +87,21 @@ async function loadUsers() {
       <td>${user.phone}</td>
       <td>${user.email}</td>
       <td>
-          ${user.city}, 
-          ${user.region}, 
+          ${user.city},
+          ${user.region},
           ${user.country}
-      </td> 
+      </td>
       <td>
            ${user.weather.weather[0].description.toUpperCase() || ""}, 
            ${temp || ""}°C
       </td>
       <td>
         <button class="editBtn" onclick="editUser('${user._id}')">Edit</button>
-        <button class="deleteBtn" onclick="deleteUser('${
-          user._id
-        }')">Delete</button>
+        <button class="deleteBtn" onclick="deleteUser('${user._id}')">Delete</button>
       </td>
     `;
 
-    tableBody.appendChild(row); // Row ko table mein add kar rahe hain
+    tableBody.appendChild(row); 
   });
 }
 
@@ -120,25 +118,24 @@ async function editUser(id) {
   document.getElementById("gender").value = user.gender;
   document.getElementById("phone").value = user.phone;
   document.getElementById("email").value = user.email;
-  document.getElementById("userId").value = user._id; // Hidden field mein userId daal rahe hain
+  document.getElementById("userId").value = user._id; 
 
   document.getElementById("userForm").scrollIntoView({ behavior: "smooth" }); // Form ko smoothly scroll kar rahe hain
 }
 
-// Yeh function ek specific user ko delete karne ke liye hai
+
 async function deleteUser(id) {
   const res = await fetch(`${BACKEND_URL}/deleteUser/${id}`, {
-    method: "DELETE", // DELETE request bhej rahe hain
+    method: "DELETE",
   });
 
-  // Response check karte hain aur success ya error pop-up dikhate hain
   if (res.ok) {
     Swal.fire("Deleted!", "User deleted successfully.", "success");
   } else {
     Swal.fire("Error!", "Failed to delete user.", "error");
   }
 
-  loadUsers(); // Updated list load karte hain
+  loadUsers();
 }
 
 // Page load hote hi saare users ko table mein load kar rahe hain
