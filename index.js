@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users";
+const BACKEND_URL = "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users" || "http://localhost:8000/api/v1/users";
 
 document.getElementById("userForm").addEventListener("submit", async (e) => {
   e.preventDefault();
