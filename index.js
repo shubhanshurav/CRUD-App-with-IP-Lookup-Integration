@@ -1,32 +1,29 @@
-const BACKEND_URL = "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users" || "http://localhost:8000/api/v1/users";
+const BACKEND_URL =
+  "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users" ||
+  "http://localhost:8000/api/v1/users";
 
 document.getElementById("userForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  
 
   const name = document.getElementById("name").value;
   const age = document.getElementById("age").value;
   const gender = document.getElementById("gender").value;
   const phone = document.getElementById("phone").value;
   const email = document.getElementById("email").value;
-
   const user = { name, age, gender, phone, email };
-
   const userId = document.getElementById("userId").value;
+
   if (userId) {
-    const response = await fetch(
-      `${BACKEND_URL}/updateUser/${userId}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/updateUser/${userId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user),
+    });
 
     if (response.ok) {
-      console.log("User updated successfully");
+      Swal.fire("Success!", "User updated successfully.", "success");
     } else {
-      console.error("Failed to update user:", await response.text());
+      Swal.fire("Error!", "Failed to update user.", "error");
     }
   } else {
     const response = await fetch(`${BACKEND_URL}/createUser`, {
@@ -36,14 +33,14 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
     });
 
     if (response.ok) {
-      console.log("User created successfully");
+      Swal.fire("Success!", "User created successfully.", "success");
     } else {
-      console.error("Failed to create user:", await response.text());
+      Swal.fire("Error!", "Failed to create user.", "error");
     }
   }
 
   document.getElementById("userForm").reset();
-  document.getElementById("userId").value = ""; // Reset ID field
+  document.getElementById("userId").value = ""; 
   loadUsers();
 });
 
@@ -55,13 +52,15 @@ async function loadUsers() {
   }
   const data = await res.json();
   const users = data.users;
-  console.log(users)
+  console.log(users);
 
   const tableBody = document.getElementById("userTable").querySelector("tbody");
   tableBody.innerHTML = "";
 
   users.map((user) => {
-    // console.log(user)
+    const kelvinToCelsius = (kelvin) => kelvin - 273.15;
+    const temp = kelvinToCelsius(user.weather?.main?.temp).toFixed(2);
+
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${user.name}</td>
@@ -69,8 +68,15 @@ async function loadUsers() {
       <td>${user.gender}</td>
       <td>${user.phone}</td>
       <td>${user.email}</td>
-      <td>${user.city}, ${user.region}, ${user.country}</</td> 
-      <td>${user.weather?.weather[0].description || ""}</td>
+      <td>
+          ${user.city}, 
+          ${user.region}, 
+          ${user.country}
+      </td> 
+      <td>
+           ${user.weather.weather[0].description.toUpperCase() || ""}, 
+           ${temp || ""}°C
+      </td>
       <td>
         <button class="editBtn" onclick="editUser('${user._id}')">Edit</button>
         <button class="deleteBtn" onclick="deleteUser('${
@@ -84,11 +90,9 @@ async function loadUsers() {
 
 async function editUser(id) {
   const res = await fetch(`${BACKEND_URL}/getUserById/${id}`);
-
-
   const data = await res.json();
   const user = data.user;
-  console.log(user)
+  console.log(user);
 
   document.getElementById("name").value = user.name;
   document.getElementById("age").value = user.age;
@@ -106,12 +110,13 @@ async function deleteUser(id) {
   });
 
   if (res.ok) {
-    console.log("User deleted successfully");
+    Swal.fire("Deleted!", "User deleted successfully.", "success");
   } else {
-    console.error("Failed to delete user:", await res.text());
+    Swal.fire("Error!", "Failed to delete user.", "error");
   }
 
   loadUsers();
 }
 
+// On page load
 window.onload = loadUsers;
