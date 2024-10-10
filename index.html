@@ -9,9 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
+  <body class="bg-dark">
     <div>
-      <h1>CRUD Application with IP Lookup</h1>
+      <h1 class="text-white">CRUD Application with IP Lookup</h1>
       <form id="userForm">
         <input type="text" id="name" placeholder="Name" required />
         <input type="number" id="age" placeholder="Age" required />
@@ -20,13 +20,13 @@
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
-        <input type="text" id="phone" placeholder="Phone Number" required />
+        <input type="number" id="phone" placeholder="Phone Number" required />
         <input type="email" id="email" placeholder="Email" required />
         <input type="hidden" id="userId" />
         <button type="submit">Submit</button>
       </form>
   
-      <table id="userTable">
+      <table id="userTable" class="text-white">
         <thead>
           <tr>
             <th>Name</th>
@@ -39,6 +39,7 @@
             <th>Edit/Delete</th>
           </tr>
         </thead>
+
         <tbody></tbody>
       </table>
     </div>

@@ -1,37 +1,49 @@
+// BACKEND_URL variable set ho rahi hai, jissey hum API calls mein use karenge
 const BACKEND_URL =
   "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users" ||
   "http://localhost:8000/api/v1/users";
 
+// Jab user form submit karega, toh yeh event listener trigger hoga
 document.getElementById("userForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+  e.preventDefault(); // Form ka default submit behavior rok raha hai taaki page reload na ho
 
+  // Form ke inputs se values le rahe hain
   const name = document.getElementById("name").value;
   const age = document.getElementById("age").value;
   const gender = document.getElementById("gender").value;
   const phone = document.getElementById("phone").value;
   const email = document.getElementById("email").value;
+
+  // Yeh object mein user data ko ek saath rakh rahe hain
   const user = { name, age, gender, phone, email };
+
+  // Hidden field se userId nikal rahe hain, yeh update karne ke time kaam aayega
   const userId = document.getElementById("userId").value;
 
+  // Agar userId exist karta hai, toh user ko update karna hai
   if (userId) {
+    // PUT request bhej rahe hain updateUser endpoint pe
     const response = await fetch(`${BACKEND_URL}/updateUser/${userId}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user),
+      headers: { "Content-Type": "application/json" }, // JSON data bhej rahe hain
+      body: JSON.stringify(user), // User object ko stringify karke body mein daal rahe hain
     });
 
+    // Response check kar rahe hain, agar successful hua toh success pop-up dikhayenge
     if (response.ok) {
       Swal.fire("Success!", "User updated successfully.", "success");
     } else {
-      Swal.fire("Error!", "Failed to update user.", "error");
+      Swal.fire("Error!", "Failed to update user.", "error"); // Agar error aayi toh error pop-up dikhayenge
     }
   } else {
+    // Agar userId nahi hai, toh naya user create karenge POST request se
     const response = await fetch(`${BACKEND_URL}/createUser`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
     });
 
+    // Response check karke appropriate pop-up dikhayenge
     if (response.ok) {
       Swal.fire("Success!", "User created successfully.", "success");
     } else {
@@ -39,28 +51,34 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
     }
   }
 
+  // Form ko reset kar rahe hain submit hone ke baad
   document.getElementById("userForm").reset();
-  document.getElementById("userId").value = ""; 
-  loadUsers();
+  document.getElementById("userId").value = ""; // Hidden field bhi reset kar rahe hain
+  loadUsers(); // Users ko load karte hain taaki updated list dikhayi de
 });
 
+// Yeh function saare users ko load kar raha hai table mein
 async function loadUsers() {
-  const res = await fetch(`${BACKEND_URL}/getDetails`);
+  const res = await fetch(`${BACKEND_URL}/getDetails`); // API call karke users ki list fetch kar rahe hain
   if (!res.ok) {
-    console.error("Failed to load users:", await res.text());
+    console.error("Failed to load users:", await res.text()); // Error handling kar rahe hain
     return;
   }
-  const data = await res.json();
+  const data = await res.json(); // JSON format mein response data ko parse kar rahe hain
   const users = data.users;
-  console.log(users);
+  console.log(users); 
 
+  // Table body ko clear kar rahe hain taaki naye rows add ho sakein
   const tableBody = document.getElementById("userTable").querySelector("tbody");
   tableBody.innerHTML = "";
 
+  // Array ke har user ke liye ek row create kar rahe hain
   users.map((user) => {
+    
     const kelvinToCelsius = (kelvin) => kelvin - 273.15;
-    const temp = kelvinToCelsius(user.weather?.main?.temp).toFixed(2);
+    const temp = kelvinToCelsius(user.weather?.main?.temp).toFixed(2); 
 
+    // Row ka HTML banate hain user ke data ke saath
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${user.name}</td>
@@ -84,39 +102,44 @@ async function loadUsers() {
         }')">Delete</button>
       </td>
     `;
-    tableBody.appendChild(row);
+
+    tableBody.appendChild(row); // Row ko table mein add kar rahe hain
   });
 }
 
+// Yeh function ek specific user ko edit karne ke liye hai
 async function editUser(id) {
-  const res = await fetch(`${BACKEND_URL}/getUserById/${id}`);
+  const res = await fetch(`${BACKEND_URL}/getUserById/${id}`); 
   const data = await res.json();
   const user = data.user;
-  console.log(user);
+  console.log(user); 
 
+  // User ki details ko form fields mein daal rahe hain edit ke liye
   document.getElementById("name").value = user.name;
   document.getElementById("age").value = user.age;
   document.getElementById("gender").value = user.gender;
   document.getElementById("phone").value = user.phone;
   document.getElementById("email").value = user.email;
-  document.getElementById("userId").value = user._id;
+  document.getElementById("userId").value = user._id; // Hidden field mein userId daal rahe hain
 
-  document.getElementById("userForm").scrollIntoView({ behavior: "smooth" });
+  document.getElementById("userForm").scrollIntoView({ behavior: "smooth" }); // Form ko smoothly scroll kar rahe hain
 }
 
+// Yeh function ek specific user ko delete karne ke liye hai
 async function deleteUser(id) {
   const res = await fetch(`${BACKEND_URL}/deleteUser/${id}`, {
-    method: "DELETE",
+    method: "DELETE", // DELETE request bhej rahe hain
   });
 
+  // Response check karte hain aur success ya error pop-up dikhate hain
   if (res.ok) {
     Swal.fire("Deleted!", "User deleted successfully.", "success");
   } else {
     Swal.fire("Error!", "Failed to delete user.", "error");
   }
 
-  loadUsers();
+  loadUsers(); // Updated list load karte hain
 }
 
-// On page load
+// Page load hote hi saare users ko table mein load kar rahe hain
 window.onload = loadUsers;
