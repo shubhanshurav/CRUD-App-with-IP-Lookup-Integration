@@ -1,6 +1,8 @@
-// frontend/app.js
+const BACKEND_URL = "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users";
+
 document.getElementById("userForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+  
 
   const name = document.getElementById("name").value;
   const age = document.getElementById("age").value;
@@ -13,7 +15,7 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
   const userId = document.getElementById("userId").value;
   if (userId) {
     const response = await fetch(
-      `https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users/updateUser/${userId}`,
+      `${BACKEND_URL}/updateUser/${userId}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -27,14 +29,11 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
       console.error("Failed to update user:", await response.text());
     }
   } else {
-    const response = await fetch(
-      "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users/createUser",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/createUser`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user),
+    });
 
     if (response.ok) {
       console.log("User created successfully");
@@ -49,9 +48,7 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
 });
 
 async function loadUsers() {
-  const res = await fetch(
-    "https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users/getDetails"
-  );
+  const res = await fetch(`${BACKEND_URL}/getDetails`);
   if (!res.ok) {
     console.error("Failed to load users:", await res.text());
     return;
@@ -86,9 +83,7 @@ async function loadUsers() {
 }
 
 async function editUser(id) {
-  const res = await fetch(
-    `https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users/getUserById/${id}`
-  );
+  const res = await fetch(`${BACKEND_URL}/getUserById/${id}`);
 
 
   const data = await res.json();
@@ -106,12 +101,9 @@ async function editUser(id) {
 }
 
 async function deleteUser(id) {
-  const res = await fetch(
-    `https://crud-app-with-ip-lookup-integration.onrender.com/api/v1/users/deleteUser/${id}`,
-    {
-      method: "DELETE",
-    }
-  );
+  const res = await fetch(`${BACKEND_URL}/deleteUser/${id}`, {
+    method: "DELETE",
+  });
 
   if (res.ok) {
     console.log("User deleted successfully");
